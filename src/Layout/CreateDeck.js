@@ -22,18 +22,27 @@ function CreateDeck() {
     setNewDeck({ ...newDeck, [target.name]: target.value });
   }
 
-  return (
-    <>
+  function breadCrumb() {
+    return (
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
-            <a href="/">Home</a>
+            <a href="/">
+              <span class="oi oi-home mr-1" />
+              Home
+            </a>
           </li>
           <li class="breadcrumb-item active" aria-current="page">
             Create Deck
           </li>
         </ol>
       </nav>
+    );
+  }
+
+  return (
+    <>
+      {breadCrumb()}
       <h1>Create Deck</h1>
       <form onSubmit={(event) => handleSubmit(event)}>
         <div className="form-group">
