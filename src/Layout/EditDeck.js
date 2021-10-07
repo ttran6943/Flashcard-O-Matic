@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams, useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { readDeck, updateDeck } from "../utils/api";
 
-function EditDeck() {
+function EditDeck({ deck, setDeck }) {
   const { deckId } = useParams();
   const history = useHistory();
-
-  const [deck, setDeck] = useState([]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -16,7 +14,7 @@ function EditDeck() {
       setDeck(readDeckResponse);
     }
     loadDeck();
-  }, []);
+  }, [deckId, setDeck]);
 
   function breadCrumb() {
     return (
