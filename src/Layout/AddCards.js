@@ -1,12 +1,11 @@
 import { createCard, readDeck } from "../utils/api";
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { useHistory, useParams } from "react-router";
+import FormCard from "./FormCard";
 
-function AddCards() {
+function AddCards({ deck, setDeck}) {
   const history = useHistory();
   const { deckId } = useParams();
-  const [deck, setDeck] = useState([]);
   const [newCard, setNewCard] = useState({
     front: "",
     back: "",
@@ -19,7 +18,7 @@ function AddCards() {
       setDeck(responseReadDeck);
     }
     loadDeck();
-  }, []);
+  }, [deckId, setDeck]);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -37,8 +36,8 @@ function AddCards() {
     setNewCard({ ...newCard, [target.name]: target.value });
   }
 
-  return (
-    <>
+  function breadCrumb() {
+    return (
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
@@ -55,43 +54,19 @@ function AddCards() {
           </li>
         </ol>
       </nav>
+    );
+  }
+
+  return (
+    <>
+      {breadCrumb()}
       <h1>{`${deck.name}: Add Card`}</h1>
-      <div>
-        <form onSubmit={(event) => handleSubmit(event)}>
-          <div className="form-group">
-            <label for="Deck Name">Front</label>
-            <textarea
-              class="form-control"
-              id="front"
-              name="front"
-              rows="3"
-              placeholder="Front side of the card"
-              type="text"
-              onChange={handleChange}
-              value={newCard.front}
-            />
-          </div>
-          <div className="form-group">
-            <label for="Deck Name">Back</label>
-            <textarea
-              class="form-control"
-              id="back"
-              name="back"
-              rows="3"
-              placeholder="Back side of the card"
-              type="text"
-              onChange={handleChange}
-              value={newCard.back}
-            />
-          </div>
-          <div>
-            <Link to={`decks/${deckId}`}>
-              <button className="btn btn-secondary mr-2">Done</button>
-            </Link>
-            <button className="btn btn-primary mr-2">Save</button>
-          </div>
-        </form>
-      </div>
+      <FormCard
+        handleSubmit={handleSubmit}
+        handleChange={handleChange}
+        deckId={deckId}
+        cardInput={newCard}
+      />
     </>
   );
 }
