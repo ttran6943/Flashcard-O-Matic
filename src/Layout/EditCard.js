@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { readCard, readDeck, updateCard } from "../utils/api/index";
+import FormCard from "./FormCard";
 
-function EditCard() {
+function EditCard({ deck, setDeck }) {
   const { deckId, cardId } = useParams();
   const history = useHistory();
 
@@ -10,12 +11,6 @@ function EditCard() {
     id: "",
     name: "",
     description: "",
-  });
-  const [deck, setDeck] = useState({
-    id: "",
-    front: "",
-    back: "",
-    deckId: "",
   });
 
   useEffect(() => {
@@ -27,7 +22,7 @@ function EditCard() {
       setDeck(deckResponse);
     }
     getCardDeck();
-  }, []);
+  }, [deckId, cardId, setDeck]);
 
   function handleChange({ target }) {
     setCard({
@@ -44,12 +39,8 @@ function EditCard() {
     return response;
   }
 
-  async function handleCancel() {
-    history.push(`/decks/${deckId}`);
-  }
-
-  return (
-    <div>
+  function breadCrumb() {
+    return (
       <ol className="breadcrumb">
         <li className="breadcrumb-item">
           <Link to="/">
@@ -62,37 +53,19 @@ function EditCard() {
         </li>
         <li className="breadcrumb-item active">Edit Card {cardId}</li>
       </ol>
-      <form onSubmit={handleSubmit}>
-        <h2>Edit Card</h2>
-        <div className="form-group">
-          <label>Front</label>
-          <textarea
-            id="front"
-            name="front"
-            className="form-control"
-            onChange={handleChange}
-            type="text"
-            value={card.front}
-          />
-        </div>
-        <div className="form-group">
-          <label>Back</label>
-          <textarea
-            id="back"
-            name="back"
-            className="form-control"
-            onChange={handleChange}
-            type="text"
-            value={card.back}
-          />
-        </div>
-        <Link to={`/decks/${deckId}`}>
-          <button className="btn btn-secondary mr-2">Cancel</button>
-        </Link>
-        <button className="btn btn-primary" type="submit">
-          Save
-        </button>
-      </form>
+    );
+  }
+
+  return (
+    <div>
+      {breadCrumb()}
+      <h2>Edit Card</h2>
+      <FormCard
+        handleSubmit={handleSubmit}
+        handleChange={handleChange}
+        deckId={deckId}
+        cardInput={card}
+      />
     </div>
   );
 }
