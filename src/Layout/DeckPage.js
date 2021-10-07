@@ -3,11 +3,9 @@ import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router";
 
-function DeckPage() {
+function DeckPage({ deck, setDeck }) {
   const history = useHistory();
   const { deckId } = useParams();
-
-  const [deck, setDeck] = useState([]);
   const [card, setCard] = useState([]);
 
   useEffect(() => {
@@ -19,7 +17,7 @@ function DeckPage() {
       setCard(decksResponse.cards);
     }
     getDeck();
-  }, []);
+  }, [deckId, setDeck]);
 
   async function handleDeleteCard(cardId) {
     if (
