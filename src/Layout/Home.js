@@ -9,7 +9,6 @@ function Home() {
   useEffect(() => {
     async function loadDecks() {
       const abortController = new AbortController();
-
       const decksResponse = await listDecks(abortController.signal);
       setDecks(decksResponse);
     }
