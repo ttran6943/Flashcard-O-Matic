@@ -1,25 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { readCard, readDeck } from "../utils/api/index";
+import { readDeck } from "../utils/api/index";
 import { Link, useParams, useHistory } from "react-router-dom";
 
-function StudyPage() {
-  const [deck, setDeck] = useState({});
+function StudyPage({ deck, setDeck }) {
   const [card, setCard] = useState([]);
   const [cardNum, setCardNum] = useState(0);
   const [isFront, setIsFront] = useState(true);
   const history = useHistory();
-
   const { deckId } = useParams();
+
   useEffect(() => {
     async function getDeck() {
       const abortController = new AbortController();
-
       const decksResponse = await readDeck(deckId, abortController.signal);
       setDeck(decksResponse);
       setCard(decksResponse.cards);
     }
     getDeck();
-  }, []);
+  }, [deckId, setDeck]);
 
   function isEnoughCards() {
     if (card.length < 3) {
@@ -31,8 +29,7 @@ function StudyPage() {
             cards in the deck.
           </p>
           <div class="row">
-            {/* TODO: LINK TO ADD CARD */}
-            <Link to={`decks/${deckId}/cards/new`}>
+            <Link to={`/decks/${deckId}/cards/new`}>
               <button class="btn btn-primary my-2 ml-3">
                 <span class="oi oi-plus mr-2"></span>
                 Add Cards
@@ -106,8 +103,8 @@ function StudyPage() {
     }
   }
 
-  return (
-    <>
+  function breadCrumb() {
+    return (
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
@@ -124,6 +121,12 @@ function StudyPage() {
           </li>
         </ol>
       </nav>
+    );
+  }
+
+  return (
+    <>
+      {breadCrumb()}
       <div class="col" id="card-display">
         <h1>{`${deck.name}: Study`}</h1>
         {isEnoughCards()}
